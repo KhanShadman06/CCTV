@@ -102,7 +102,10 @@
                                 </div>
                             </div>
                             <div class="o_kanban_footer">
-                                <a t-if="record.stream_url.raw_value" t-att-href="record.stream_url.raw_value" target="_blank" class="btn btn-secondary btn-sm">
+                                <a t-if="record.id.raw_value"
+                                   t-att-href="'/cctv/play/%s' % record.id.raw_value"
+                                   target="_blank"
+                                   class="btn btn-secondary btn-sm">
                                     Open Stream
                                 </a>
                             </div>
@@ -171,7 +174,6 @@
 
     <menuitem id="menu_cctv_root"
               name="CCTV"
-              parent="base.menu_custom"
               sequence="40"
               action="action_cctv_cameras"
               groups="cctv_monitoring.group_cctv_user"/>

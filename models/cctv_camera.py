@@ -69,11 +69,11 @@ class CctvCamera(models.Model):
     ]
 
     def action_open_stream(self):
-        """Placeholder smart button action that opens the stream URL in new tab."""
+        """Open the inline player that fetches a short-lived playback URL via the bridge."""
         self.ensure_one()
         return {
             "type": "ir.actions.act_url",
-            "url": self.stream_url,
+            "url": f"/cctv/play/{self.id}",
             "target": "new",
         }
 

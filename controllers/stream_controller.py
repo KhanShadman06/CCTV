@@ -40,3 +40,28 @@ class CctvStreamController(http.Controller):
 
         _logger.info("Bridge session granted for camera %s via protocol %s", camera.id, session["protocol"])
         return payload
+
+    @http.route("/cctv/play/<int:camera_id>", type="http", auth="user")
+    def play_stream(self, camera_id):
+        """Render a minimal player page that embeds the bridge output."""
+
+        user = request.env.user
+        if not user.has_group("cctv_monitoring.group_cctv_user"):
+            raise AccessError(_("You are not allowed to view CCTV streams."))
+
+        camera = request.env["cctv.camera"].browse(camera_id)
+        if not camera.exists():
+            raise NotFound()
+
+        camera.check_access_rights("read")
+        camera.check_access_rule("read")
+        camera.ensure_one()
+
+        session = camera.sudo().request_bridge_session()
+        return request.render(
+            "cctv_monitoring.stream_player",
+            {
+                "camera": camera,
+                "session": session,
+            },
+        )

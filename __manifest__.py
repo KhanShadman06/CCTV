@@ -14,6 +14,7 @@
         "security/ir.model.access.csv",
         "views/cctv_camera_views.xml",
         "views/res_config_settings_views.xml",
+        "views/stream_templates.xml",
     ],
     "application": True,
     "installable": True,

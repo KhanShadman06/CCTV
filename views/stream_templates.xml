@@ -1,0 +1,70 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<odoo>
+    <template id="stream_player" name="CCTV Stream Player">
+        <t t-call="web.html_container">
+            <t t-set="title">
+                <t t-esc="camera.name or 'Camera'"/>
+            </t>
+            <div class="o_container" t-att-data-playback-url="session['playback_url']">
+                <div class="o_row">
+                    <div class="col-12 col-lg-10 offset-lg-1 mt-5">
+                        <h2 class="mb-3">
+                            <span class="fa fa-video-camera me-2"/>
+                            <t t-esc="camera.name"/>
+                        </h2>
+                        <p class="text-muted">
+                            <t t-esc="camera.location or _('Live stream')"/>
+                        </p>
+                        <div class="ratio ratio-16x9 bg-dark rounded shadow">
+                            <video id="cctv-player" class="w-100 h-100" controls="controls" playsinline="playsinline" autoplay="autoplay"></video>
+                        </div>
+                        <div class="alert alert-info mt-3" role="alert">
+                            <t t-esc="'Stream expires at %s' % (session.get('expires_at') or 'unknown')"/>
+                        </div>
+                        <p class="small text-muted">
+                            <t t-esc="'If the video does not start automatically, open this link in VLC or another HLS-capable player:'"/>
+                            <a t-att-href="session['playback_url']" target="_blank" rel="noopener">
+                                <t t-esc="session['playback_url']"/>
+                            </a>
+                        </p>
+                    </div>
+                </div>
+            </div>
+            <script src="https://cdn.jsdelivr.net/npm/hls.js@1.5.7/dist/hls.min.js"/>
+            <script type="text/javascript">
+<![CDATA[
+                (function () {
+                    var container = document.querySelector('.o_container[data-playback-url]');
+                    var playbackUrl = container ? container.dataset.playbackUrl : '';
+                    var video = document.getElementById('cctv-player');
+                    if (!playbackUrl) {
+                        return;
+                    }
+                    function safePlay() {
+                        var p = video.play();
+                        if (p && p.catch) {
+                            p.catch(function () {});
+                        }
+                    }
+                    if (video.canPlayType('application/vnd.apple.mpegurl')) {
+                        video.src = playbackUrl;
+                        safePlay();
+                    } else if (window.Hls && window.Hls.isSupported()) {
+                        var hls = new Hls();
+                        hls.loadSource(playbackUrl);
+                        hls.attachMedia(video);
+                        hls.on(Hls.Events.MEDIA_ATTACHED, function () {
+                            safePlay();
+                        });
+                    } else {
+                        video.outerHTML = '<div class="alert alert-danger mt-4">' +
+                            'Your browser cannot play HLS streams directly. ' +
+                            'Open the link above in VLC or a compatible player.' +
+                            '</div>';
+                    }
+                })();
+]]>
+            </script>
+        </t>
+    </template>
+</odoo>
