@@ -1,0 +1,26 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<odoo>
+    <record id="res_config_settings_view_form_cctv_monitoring" model="ir.ui.view">
+        <field name="name">res.config.settings.view.form.cctv.monitoring</field>
+        <field name="model">res.config.settings</field>
+        <field name="inherit_id" ref="base_setup.res_config_settings_view_form"/>
+        <field name="arch" type="xml">
+            <xpath expr="//app[@name='general_settings']" position="inside">
+                <block title="CCTV Monitoring" id="cctv_monitoring_settings_block">
+                    <setting id="cctv_bridge_base_url_setting" string="Bridge Base URL" help="Endpoint that receives RTSP URLs and returns browser-friendly streams.">
+                        <field name="cctv_bridge_base_url" placeholder="https://bridge.local"/>
+                    </setting>
+                    <setting id="cctv_bridge_api_key_setting" string="Bridge API Key" help="Optional API key (Bearer token) for the bridge service.">
+                        <field name="cctv_bridge_api_key" password="True"/>
+                    </setting>
+                    <setting id="cctv_bridge_protocol_setting" string="Bridge Output Protocol" help="Choose whether the bridge should output HLS or WebRTC streams.">
+                        <field name="cctv_bridge_protocol" widget="radio"/>
+                    </setting>
+                    <setting id="cctv_bridge_session_ttl_setting" string="Stream TTL (seconds)" help="Time (seconds) before the generated playback URL expires.">
+                        <field name="cctv_bridge_session_ttl"/>
+                    </setting>
+                </block>
+            </xpath>
+        </field>
+    </record>
+</odoo>

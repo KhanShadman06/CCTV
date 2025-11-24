@@ -1,0 +1,5 @@
+id,name,model_id:id,group_id:id,perm_read,perm_write,perm_create,perm_unlink
+access_cctv_camera_user,access.cctv.camera.user,model_cctv_camera,cctv_monitoring.group_cctv_user,1,0,0,0
+access_cctv_camera_manager,access.cctv.camera.manager,model_cctv_camera,cctv_monitoring.group_cctv_manager,1,1,1,1
+access_cctv_camera_group_user,access.cctv.camera.group.user,model_cctv_camera_group,cctv_monitoring.group_cctv_user,1,0,0,0
+access_cctv_camera_group_manager,access.cctv.camera.group.manager,model_cctv_camera_group,cctv_monitoring.group_cctv_manager,1,1,1,1
