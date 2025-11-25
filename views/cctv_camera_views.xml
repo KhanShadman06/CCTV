@@ -103,8 +103,9 @@
                             </div>
                             <div class="o_kanban_footer">
                                 <a t-if="record.id.raw_value"
-                                   t-att-href="'/cctv/play/%s' % record.id.raw_value"
+                                   t-att-href="'/cctv/play/%s?db=%s' % (record.id.raw_value, env.cr.dbname)"
                                    target="_blank"
+                                   role="button"
                                    class="btn btn-secondary btn-sm">
                                     Open Stream
                                 </a>

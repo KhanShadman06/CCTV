@@ -71,9 +71,10 @@ class CctvCamera(models.Model):
     def action_open_stream(self):
         """Open the inline player that fetches a short-lived playback URL via the bridge."""
         self.ensure_one()
+        db_name = self.env.cr.dbname
         return {
             "type": "ir.actions.act_url",
-            "url": f"/cctv/play/{self.id}",
+            "url": f"/cctv/play/{self.id}?db={db_name}",
             "target": "new",
         }
 
