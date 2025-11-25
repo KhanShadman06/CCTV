@@ -47,6 +47,7 @@ class CctvCamera(models.Model):
         copy=False,
         help="Stored for bridge services that need camera auth.",
     )
+    play_url = fields.Char(compute="_compute_play_url", store=False)
     refresh_interval = fields.Integer(
         default=60,
         help="Seconds between stream token refresh attempts when using vendor APIs.",
@@ -82,3 +83,11 @@ class CctvCamera(models.Model):
         """Shortcut used by controllers/tests to obtain a playback URL."""
         self.ensure_one()
         return BridgeClient(self.env).request_stream(self)
+
+    def _compute_play_url(self):
+        db_name = self.env.cr.dbname
+        for camera in self:
+            if camera.id:
+                camera.play_url = f"/cctv/play/{camera.id}?db={db_name}"
+            else:
+                camera.play_url = False
