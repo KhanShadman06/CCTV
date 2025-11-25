@@ -1,3 +1,5 @@
+import re
+
 from odoo import api, fields, models
 
 from ..services.bridge_client import BridgeClient
@@ -47,6 +49,10 @@ class CctvCamera(models.Model):
         copy=False,
         help="Stored for bridge services that need camera auth.",
     )
+    webrtc_path = fields.Char(
+        string="WebRTC Path",
+        help="Path name served by the WebRTC gateway (defaults to Identifier or Name).",
+    )
     play_url = fields.Char(compute="_compute_play_url", store=False)
     refresh_interval = fields.Integer(
         default=60,
@@ -91,3 +97,27 @@ class CctvCamera(models.Model):
                 camera.play_url = f"/cctv/play/{camera.id}?db={db_name}"
             else:
                 camera.play_url = False
+
+    def _generate_webrtc_path(self):
+        self.ensure_one()
+        base = self.identifier or (self.name or "")
+        base = base.strip() or f"camera-{self.id or ''}"
+        slug = re.sub(r"[^a-zA-Z0-9]+", "-", base)
+        slug = re.sub(r"-{2,}", "-", slug).strip("-")
+        return (slug or f"camera-{self.id}").lower()
+
+    @api.model_create_multi
+    def create(self, vals_list):
+        records = super().create(vals_list)
+        for record, vals in zip(records, vals_list):
+            if not vals.get("webrtc_path"):
+                record.webrtc_path = record._generate_webrtc_path()
+        return records
+
+    def write(self, vals):
+        res = super().write(vals)
+        if "webrtc_path" not in vals:
+            for record in self:
+                if not record.webrtc_path:
+                    record.webrtc_path = record._generate_webrtc_path()
+        return res

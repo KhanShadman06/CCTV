@@ -22,20 +22,47 @@ class BridgeClient:
         protocol = params.get_param("cctv_monitoring.bridge_protocol", "hls") or "hls"
         api_key = params.get_param("cctv_monitoring.bridge_api_key") or False
         ttl = params.get_param("cctv_monitoring.bridge_session_ttl", "60")
+        mediamtx_base = (params.get_param("cctv_monitoring.mediamtx_base_url") or "").strip()
         try:
             ttl = int(ttl)
         except (TypeError, ValueError):
             ttl = 60
 
+        return {
+            "bridge_base_url": base_url.rstrip("/") if base_url else "",
+            "protocol": protocol,
+            "api_key": api_key,
+            "ttl": ttl,
+            "mediamtx_base_url": mediamtx_base.rstrip("/") if mediamtx_base else "",
+        }
+
+    def request_stream(self, camera) -> Dict[str, Any]:
+        config = self._config_parameters()
+        protocol = config["protocol"]
+
+        if protocol == "webrtc":
+            mediamtx_base = config["mediamtx_base_url"]
+            if not mediamtx_base:
+                raise UserError(
+                    _("Configure the Mediamtx Base URL under Settings > General Settings > CCTV.")
+                )
+            path = camera.webrtc_path or camera.identifier or f"camera-{camera.id}"
+            path = path.strip("/")
+            playback_url = f"{mediamtx_base}/{path or camera.id}/whep"
+            return {
+                "playback_url": playback_url,
+                "protocol": "webrtc",
+                "expires_at": False,
+                "raw_response": {"path": path},
+            }
+
+        base_url = config["bridge_base_url"]
         if not base_url:
             raise UserError(
                 _("Configure the CCTV Bridge Base URL under Settings > General Settings > CCTV."),
             )
-
-        return base_url.rstrip("/"), protocol, api_key, ttl
-
-    def request_stream(self, camera) -> Dict[str, Any]:
-        base_url, protocol, api_key, ttl = self._config_parameters()
+        api_key = config["api_key"]
+        ttl = config["ttl"]
 
         payload = {
             "source": camera.stream_url,

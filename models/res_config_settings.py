@@ -29,3 +29,8 @@ class ResConfigSettings(models.TransientModel):
         config_parameter="cctv_monitoring.bridge_session_ttl",
         help="How long the generated playback URL should stay valid.",
     )
+    cctv_mediamtx_base_url = fields.Char(
+        string="Mediamtx Base URL",
+        config_parameter="cctv_monitoring.mediamtx_base_url",
+        help="Base URL of the WebRTC gateway (e.g., http://mediamtx:8889).",
+    )

@@ -13,7 +13,7 @@
                             <t t-esc="camera.name"/>
                         </h2>
                         <p class="text-muted">
-                            <t t-esc="camera.location or _('Live stream')"/>
+                            <t t-esc="camera.location or 'Live stream'"/>
                         </p>
                         <div class="ratio ratio-16x9 bg-dark rounded shadow">
                             <video id="cctv-player" class="w-100 h-100" controls="controls" playsinline="playsinline" autoplay="autoplay"></video>

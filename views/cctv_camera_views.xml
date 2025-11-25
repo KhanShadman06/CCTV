@@ -46,6 +46,7 @@
                             <field name="protocol"/>
                             <field name="stream_url" placeholder="rtsp://user:pass@host:554/..."/>
                             <field name="snapshot_url"/>
+                            <field name="webrtc_path"/>
                             <field name="refresh_interval"/>
                         </group>
                     </group>

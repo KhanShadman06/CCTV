@@ -19,6 +19,9 @@
                     <setting id="cctv_bridge_session_ttl_setting" string="Stream TTL (seconds)" help="Time (seconds) before the generated playback URL expires.">
                         <field name="cctv_bridge_session_ttl"/>
                     </setting>
+                    <setting id="cctv_mediamtx_base_url_setting" string="Mediamtx Base URL" help="Base URL for the WebRTC gateway (e.g., http://mediamtx:8889).">
+                        <field name="cctv_mediamtx_base_url" placeholder="http://mediamtx:8889"/>
+                    </setting>
                 </block>
             </xpath>
         </field>
